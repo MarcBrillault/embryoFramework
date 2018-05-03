@@ -8,10 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 $request  = Request::createFromGlobals();
 $response = new Response();
 
-$templatesPath = __DIR__ . '/../src/pages/';
+$templatesPath = __DIR__ . '/../src/pages/%s.php';
 $map           = [
-    '/hello' => 'hello.php',
-    '/bye'   => 'bye.php',
+    '/hello' => 'hello',
+    '/bye'   => 'bye',
 ];
 
 $path = $request->getPathInfo();
@@ -19,11 +19,11 @@ $path = $request->getPathInfo();
 $loaded = false;
 
 if (isset($map[$path])) {
-    $fileName = $map[$path];
-    $filePath = $templatesPath . $fileName;
+    $filePath = sprintf($templatesPath, $map[$path]);
     if (file_exists($filePath)) {
         $loaded = true;
         ob_start();
+        extract($request->query->all(), EXTR_SKIP);
         include $filePath;
         $response->setContent(ob_get_clean());
     }
