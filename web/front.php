@@ -20,7 +20,7 @@ $matcher = new UrlMatcher($routes, $context);
 
 try {
     $request->attributes->add($matcher->match($request->getPathInfo()));
-    $response = call_user_func('render_template', $request);
+    $response = call_user_func($request->attributes->get('_controller'), $request);
 } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
     $response->setStatusCode(404);
     $response->setContent('Not Found');
